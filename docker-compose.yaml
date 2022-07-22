@@ -3,7 +3,7 @@ version: '3'
 services:
 
   planka:
-    image: meltyshev/planka:latest
+    image: ghcr.io/plankanban/planka:latest
     command: >
       bash -c
         "for i in `seq 1 30`; do
@@ -14,13 +14,14 @@ services:
         done; (exit $$s)"
     restart: unless-stopped
     volumes:
-      - ./user-avatars:/app/public/user-avatars
-      - ./project-background-images:/app/public/project-background-images
-      - ./attachments:/app/public/attachments
+      - user-avatars:/app/public/user-avatars
+      - project-background-images:/app/public/project-background-images
+      - attachments:/app/private/attachments
     ports:
-      - "8200:1337"
+      - 8200:1337
     environment:
       - BASE_URL=http://localhost:8200
+      - TRUST_PROXY=0
       - DATABASE_URL=postgresql://postgres@postgres/planka
       - SECRET_KEY=notsecretkey
     depends_on:
@@ -30,9 +31,15 @@ services:
     image: postgres:alpine
     restart: unless-stopped
     volumes:
-      - ./db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=planka
       - POSTGRES_HOST_AUTH_METHOD=trust
 
-
+volumes:
+  user-avatars:
+  project-background-images:
+  attachments:
+  db-data:
+  
+  
