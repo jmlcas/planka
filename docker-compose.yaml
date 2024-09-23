@@ -2,14 +2,6 @@ services:
 
   planka:
     image: ghcr.io/plankanban/planka:latest
-    command: >
-      bash -c
-        "for i in `seq 1 30`; do
-          ./start.sh &&
-          s=$$? && break || s=$$?;
-          echo \"Tried $$i times. Waiting 5 seconds...\";
-          sleep 5;
-        done; (exit $$s)"
     restart: unless-stopped
     volumes:
       - user-avatars:/app/public/user-avatars
@@ -19,7 +11,6 @@ services:
       - 8200:1337
     environment:
       - BASE_URL=http://localhost:8200
-      - TRUST_PROXY=0
       - DATABASE_URL=postgresql://postgres@postgres/planka
       - SECRET_KEY=notsecretkey
     depends_on:
